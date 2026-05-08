@@ -5,16 +5,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="#F8F9FA"
     tools:context=".Controllers.MainController">
 
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="6dp"
+        android:layout_weight="1"
+        app:cardBackgroundColor="@color/white">
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
         android:divider="@color/border_color"
         android:dividerHeight="1dp"
         android:listSelector="@android:color/transparent"  />
+
+    </com.google.android.material.card.MaterialCardView>
 
     <LinearLayout
         android:orientation="vertical"
