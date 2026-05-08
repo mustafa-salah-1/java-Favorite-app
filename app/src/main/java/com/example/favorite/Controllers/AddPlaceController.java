@@ -138,8 +138,6 @@ public class AddPlaceController extends AppCompatActivity implements SavePlaceDi
     }
 
     public void openMainPage(View view) {
-        Intent intent = new Intent(AddPlaceController.this, MainController.class);
-        startActivity(intent);
         finish();
     }
 }

@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Favorite</string>
     <string name="title_place_saver">Add a new place</string>
+    <string name="title_place_detail">Place Details</string>
     <string name="num_places">Loading</string>
     <string name="title_toolBar">My Favorites</string>
 </resources>

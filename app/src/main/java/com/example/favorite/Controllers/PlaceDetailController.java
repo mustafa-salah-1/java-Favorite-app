@@ -10,11 +10,17 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.favorite.R;
 
+import org.osmdroid.config.Configuration;
+import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.Marker;
+
 public class PlaceDetailController extends AppCompatActivity {
 
     private TextView textViewName, textViewCoords, textViewDescription;
     private View cardViewDescription;
     private Button buttonViewOnMap, buttonBack;
+    private MapView mapView;
     private String name, description, lat, lon;
 
     @Override
@@ -26,8 +32,10 @@ public class PlaceDetailController extends AppCompatActivity {
         textViewCoords = findViewById(R.id.textViewDetailCoords);
         textViewDescription = findViewById(R.id.textViewDetailDescription);
         cardViewDescription = findViewById(R.id.cardViewDescription);
-        buttonViewOnMap = findViewById(R.id.buttonViewOnMap);
-        buttonBack = findViewById(R.id.buttonBack);
+        mapView = findViewById(R.id.mapView);
+
+        // OsmDroid Configuration
+        Configuration.getInstance().load(this, android.preference.PreferenceManager.getDefaultSharedPreferences(this));
 
         name = getIntent().getStringExtra("placeName");
         description = getIntent().getStringExtra("description");
@@ -35,30 +43,51 @@ public class PlaceDetailController extends AppCompatActivity {
         lon = getIntent().getStringExtra("longitude");
 
         textViewName.setText(name);
-        textViewCoords.setText("Lat: " + lat + "\nLon: " + lon);
+        textViewCoords.setText("Latitude: " + lat + " | Longitude: " + lon);
 
         if (description != null && !description.isEmpty()) {
             textViewDescription.setText(description);
             cardViewDescription.setVisibility(View.VISIBLE);
+        } else {
+            cardViewDescription.setVisibility(View.GONE);
         }
 
-        buttonViewOnMap.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(PlaceDetailController.this, AddPlaceController.class);
-                intent.putExtra("placeName", name);
-                intent.putExtra("description", description);
-                intent.putExtra("latitude", lat);
-                intent.putExtra("longitude", lon);
-                startActivity(intent);
-            }
-        });
+        // Initialize Map
+        if (lat != null && lon != null) {
+            double latitude = Double.parseDouble(lat);
+            double longitude = Double.parseDouble(lon);
+            GeoPoint startPoint = new GeoPoint(latitude, longitude);
 
-        buttonBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+            mapView.setMultiTouchControls(true);
+            mapView.getController().setZoom(15.0);
+            mapView.getController().setCenter(startPoint);
+
+            Marker marker = new Marker(mapView);
+            marker.setPosition(startPoint);
+            marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+            marker.setTitle(name);
+            mapView.getOverlays().add(marker);
+        }
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mapView != null) {
+            mapView.onResume();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mapView != null) {
+            mapView.onPause();
+        }
+    }
+    public void openMainPage(View view) {
+        finish();
     }
 }
+
