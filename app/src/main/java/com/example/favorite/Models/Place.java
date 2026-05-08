@@ -14,6 +14,16 @@ public class Place {
     private static final String PREF_NAME = "favorite";
     private static final String KEY_LIST = "places";
 
+    public static boolean isNameExists(Context context, String name) {
+        List<PlaceItem> list = getAll(context);
+        for (PlaceItem item : list) {
+            if (item.getName().equalsIgnoreCase(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static List<PlaceItem> getAll(Context context) {
         List<PlaceItem> resultList = new ArrayList<>();
 

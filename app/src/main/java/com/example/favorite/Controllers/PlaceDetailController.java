@@ -1,13 +1,13 @@
 package com.example.favorite.Controllers;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.favorite.Models.Place;
+import com.example.favorite.Models.PlaceItem;
 import com.example.favorite.R;
 
 import org.osmdroid.config.Configuration;
@@ -18,20 +18,14 @@ import com.example.favorite.Components.SavePlaceDialogFragment;
 import com.example.favorite.Components.DeleteConfirmDialogFragment;
 import android.content.Context;
 import android.content.SharedPreferences;
-import java.util.HashSet;
-import java.util.Set;
 import android.widget.Toast;
 
-public class PlaceDetailController extends AppCompatActivity implements 
-        SavePlaceDialogFragment.SavePlaceListener, 
-        DeleteConfirmDialogFragment.DeleteConfirmListener {
+public class PlaceDetailController extends AppCompatActivity  {
 
     private TextView textViewName, textViewCoords, textViewDescription;
     private View cardViewDescription;
     private MapView mapView;
-    private String name, description, lat, lon;
-    private SharedPreferences sharedPreferences;
-    private String originalPlaceString;
+    private PlaceItem currentPlace;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,32 +38,31 @@ public class PlaceDetailController extends AppCompatActivity implements
         cardViewDescription = findViewById(R.id.cardViewDescription);
         mapView = findViewById(R.id.mapView);
 
-        sharedPreferences = getSharedPreferences("com.example.favorite", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences("com.example.favorite", Context.MODE_PRIVATE);
         // OsmDroid Configuration
         Configuration.getInstance().load(this, sharedPreferences);
 
-        name = getIntent().getStringExtra("placeName");
-        description = getIntent().getStringExtra("description");
-        lat = getIntent().getStringExtra("latitude");
-        lon = getIntent().getStringExtra("longitude");
+        String name = getIntent().getStringExtra("placeName");
+        String description = getIntent().getStringExtra("description");
+        String latStr = getIntent().getStringExtra("latitude");
+        String lonStr = getIntent().getStringExtra("longitude");
 
-        // Construct the original string to find it later for editing/deletion
-        originalPlaceString = name + "," + (description != null ? description : "") + "," + lat + "," + lon;
+        if (name != null && latStr != null && lonStr != null) {
+            double latitude = Double.parseDouble(latStr);
+            double longitude = Double.parseDouble(lonStr);
+            currentPlace = new PlaceItem(name, description, latitude, longitude);
 
-        textViewName.setText(name);
-        textViewCoords.setText("Latitude: " + lat + " | Longitude: " + lon);
+            textViewName.setText(currentPlace.getName());
+            textViewCoords.setText("Latitude: " + currentPlace.getLatitude() + " | Longitude: " + currentPlace.getLongitude());
 
-        if (description != null && !description.isEmpty()) {
-            textViewDescription.setText(description);
-            cardViewDescription.setVisibility(View.VISIBLE);
-        } else {
-            cardViewDescription.setVisibility(View.GONE);
-        }
+            if (currentPlace.getDescription() != null && !currentPlace.getDescription().isEmpty()) {
+                textViewDescription.setText(currentPlace.getDescription());
+                cardViewDescription.setVisibility(View.VISIBLE);
+            } else {
+                cardViewDescription.setVisibility(View.GONE);
+            }
 
-        // Initialize Map
-        if (lat != null && lon != null) {
-            double latitude = Double.parseDouble(lat);
-            double longitude = Double.parseDouble(lon);
+            // Initialize Map
             GeoPoint startPoint = new GeoPoint(latitude, longitude);
 
             mapView.setMultiTouchControls(true);
@@ -79,7 +72,7 @@ public class PlaceDetailController extends AppCompatActivity implements
             Marker marker = new Marker(mapView);
             marker.setPosition(startPoint);
             marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-            marker.setTitle(name);
+            marker.setTitle(currentPlace.getName());
             mapView.getOverlays().add(marker);
         }
 
@@ -105,75 +98,19 @@ public class PlaceDetailController extends AppCompatActivity implements
     }
 
     public void editPlace(View view) {
-        if (lat != null && lon != null) {
-            double latitude = Double.parseDouble(lat);
-            double longitude = Double.parseDouble(lon);
-            SavePlaceDialogFragment dialog = SavePlaceDialogFragment.newInstance(
-                    new GeoPoint(latitude, longitude),
-                    name,
-                    description != null ? description : ""
-            );
-            dialog.show(getSupportFragmentManager(), "EditPlaceDialog");
-        }
+        SavePlaceDialogFragment dialog = SavePlaceDialogFragment.newInstance(
+                    new GeoPoint(currentPlace.getLatitude(), currentPlace.getLongitude()),
+                    currentPlace.getName(),
+                    currentPlace.getDescription()
+        );
+        dialog.show(getSupportFragmentManager(), "EditPlaceDialog");
+
     }
 
     public void deletePlace(View view) {
-        DeleteConfirmDialogFragment dialog = DeleteConfirmDialogFragment.newInstance();
+        DeleteConfirmDialogFragment dialog = DeleteConfirmDialogFragment.newInstance(currentPlace);
         dialog.show(getSupportFragmentManager(), "DeleteConfirmDialog");
     }
 
-    @Override
-    public void onDeleteConfirmed() {
-        removePlaceFromStorage();
-        finish();
-    }
-
-    private void removePlaceFromStorage() {
-        Set<String> set = sharedPreferences.getStringSet("places", new HashSet<String>());
-        Set<String> newSet = new HashSet<>(set);
-        
-        // Try to find the string. Since it might have been saved in different formats, 
-        // we should be careful. But based on AddPlaceController, it's name,description,lat,lon.
-        if (newSet.contains(originalPlaceString)) {
-            newSet.remove(originalPlaceString);
-        } else {
-            // Fallback: try to find by name and coords if description matches empty
-            String fallback = name + ",," + lat + "," + lon;
-            newSet.remove(fallback);
-        }
-        
-        sharedPreferences.edit().putStringSet("places", newSet).apply();
-        Toast.makeText(this, "Place deleted", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onPlaceSaved(String newName, String newDescription, GeoPoint p) {
-        // Remove old entry
-        Set<String> set = sharedPreferences.getStringSet("places", new HashSet<String>());
-        Set<String> newSet = new HashSet<>(set);
-        newSet.remove(originalPlaceString);
-        
-        // Add new entry
-        String newPlaceString = newName + "," + newDescription + "," + p.getLatitude() + "," + p.getLongitude();
-        newSet.add(newPlaceString);
-        
-        sharedPreferences.edit().putStringSet("places", newSet).apply();
-        
-        // Update UI
-        name = newName;
-        description = newDescription;
-        textViewName.setText(name);
-        if (description != null && !description.isEmpty()) {
-            textViewDescription.setText(description);
-            cardViewDescription.setVisibility(View.VISIBLE);
-        } else {
-            cardViewDescription.setVisibility(View.GONE);
-        }
-        
-        // Update originalPlaceString for subsequent edits
-        originalPlaceString = newPlaceString;
-        
-        Toast.makeText(this, "Place updated", Toast.LENGTH_SHORT).show();
-    }
 }
 
