@@ -15,13 +15,16 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 import com.example.favorite.Components.SavePlaceDialogFragment;
+import com.example.favorite.Components.DeleteConfirmDialogFragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import java.util.HashSet;
 import java.util.Set;
 import android.widget.Toast;
 
-public class PlaceDetailController extends AppCompatActivity implements SavePlaceDialogFragment.SavePlaceListener {
+public class PlaceDetailController extends AppCompatActivity implements 
+        SavePlaceDialogFragment.SavePlaceListener, 
+        DeleteConfirmDialogFragment.DeleteConfirmListener {
 
     private TextView textViewName, textViewCoords, textViewDescription;
     private View cardViewDescription;
@@ -116,15 +119,14 @@ public class PlaceDetailController extends AppCompatActivity implements SavePlac
     }
 
     public void deletePlace(View view) {
-        new androidx.appcompat.app.AlertDialog.Builder(this)
-                .setTitle("Delete Place")
-                .setMessage("Are you sure you want to delete this place?")
-                .setPositiveButton("Delete", (dialog, which) -> {
-                    removePlaceFromStorage();
-                    finish();
-                })
-                .setNegativeButton("Cancel", null)
-                .show();
+        DeleteConfirmDialogFragment dialog = DeleteConfirmDialogFragment.newInstance();
+        dialog.show(getSupportFragmentManager(), "DeleteConfirmDialog");
+    }
+
+    @Override
+    public void onDeleteConfirmed() {
+        removePlaceFromStorage();
+        finish();
     }
 
     private void removePlaceFromStorage() {
