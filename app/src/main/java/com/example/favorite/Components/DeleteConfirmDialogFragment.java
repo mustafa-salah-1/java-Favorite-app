@@ -10,29 +10,27 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import com.example.favorite.Models.Place;
+import com.example.favorite.Models.PlaceItem;
 import com.example.favorite.R;
 
 public class DeleteConfirmDialogFragment extends DialogFragment {
+    private static PlaceItem p;
 
-    public interface DeleteConfirmListener {
-        void onDeleteConfirmed();
-    }
-
-    private DeleteConfirmListener listener;
-
-    public static DeleteConfirmDialogFragment newInstance() {
+    public static DeleteConfirmDialogFragment newInstance(PlaceItem currentPlace) {
+        p = currentPlace;
         return new DeleteConfirmDialogFragment();
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        listener = (DeleteConfirmListener) context;
     }
 
     @Override
@@ -45,26 +43,21 @@ public class DeleteConfirmDialogFragment extends DialogFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Dialog dialog = getDialog();
+        int width = ViewGroup.LayoutParams.MATCH_PARENT;
+        int height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        dialog.getWindow().setLayout(width, height);
 
         Button btnDelete = view.findViewById(R.id.btnDelete);
         Button btnCancel = view.findViewById(R.id.btnCancel);
 
         btnDelete.setOnClickListener(v -> {
-            listener.onDeleteConfirmed();
+            Place.deletePlace(getActivity(), p);
+            Toast.makeText(getActivity(), "Place deleted", Toast.LENGTH_SHORT).show();
             dismiss();
+            getActivity().finish();
         });
 
         btnCancel.setOnClickListener(v -> dismiss());
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        Dialog dialog = getDialog();
-        if (dialog != null) {
-            int width = ViewGroup.LayoutParams.MATCH_PARENT;
-            int height = ViewGroup.LayoutParams.WRAP_CONTENT;
-            dialog.getWindow().setLayout(width, height);
-        }
     }
 }

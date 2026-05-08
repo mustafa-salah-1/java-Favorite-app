@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -84,16 +85,36 @@ public class SavePlaceDialogFragment extends DialogFragment {
         }
 
         button_save.setOnClickListener(v -> {
-            String name = nameInput.getText() != null ? nameInput.getText().toString() : "";
+            String name = nameInput.getText() != null ? nameInput.getText().toString().trim() : "";
             String description = descriptionInput.getText() != null ? descriptionInput.getText().toString() : "";
-            if (!name.trim().isEmpty()) {
-                PlaceItem newPlace = new PlaceItem(name, description, point.getLatitude(), point.getLongitude());
-                Place.addPlace(getContext(), newPlace);
-                dismiss();
-                getActivity().finish();
-            } else {
+            
+            if (name.trim().isEmpty()) {
                 nameInput.setText(null);
                 nameInput.setError("Please enter a name");
+                return;
+            }
+
+            String initialName = getArguments() != null ? getArguments().getString("name", "") : "";
+            
+            // If it's a new place OR the name has changed, check for duplicates
+            if ((initialName.isEmpty() || !name.equalsIgnoreCase(initialName)) && Place.isNameExists(getContext(), name)) {
+                Toast.makeText(getContext(), "we have that name", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            PlaceItem newPlace = new PlaceItem(name, description, point.getLatitude(), point.getLongitude());
+            
+            if (initialName.isEmpty()) {
+                Place.addPlace(getContext(), newPlace);
+            } else {
+                String initialDescription = getArguments().getString("description", "");
+                PlaceItem oldPlace = new PlaceItem(initialName, initialDescription, point.getLatitude(), point.getLongitude());
+                Place.updatePlace(getContext(), oldPlace, newPlace);
+            }
+            
+            dismiss();
+            if (getActivity() != null) {
+                getActivity().finish();
             }
         });
 
