@@ -2,10 +2,14 @@ package com.example.favorite.Controllers;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -18,7 +22,8 @@ import java.util.List;
 public class MainController extends AppCompatActivity {
 
     private ListView listView;
-    private List<PlaceItem> placeList;
+    private List<PlaceItem> displayList;
+    private EditText search;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,11 +31,12 @@ public class MainController extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         listView = findViewById(R.id.listView);
+        search = findViewById(R.id.search_place);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                PlaceItem selectedPlace = placeList.get(i);
+                PlaceItem selectedPlace = displayList.get(i);
                 Intent intent = new Intent(MainController.this, PlaceDetailController.class);
                 intent.putExtra("placeName", selectedPlace.getName());
                 intent.putExtra("description", selectedPlace.getDescription());
@@ -38,6 +44,19 @@ public class MainController extends AppCompatActivity {
                 intent.putExtra("longitude", String.valueOf(selectedPlace.getLongitude()));
                 startActivity(intent);
             }
+        });
+
+        search.addTextChangedListener( new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filter(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
         });
     }
 
@@ -49,18 +68,26 @@ public class MainController extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        updateList();
+        filter(search.getText().toString());
     }
 
-    private void updateList() {
-        placeList = Place.getAll(this);
+    private void filter(String text) {
+        List<PlaceItem> allPlaces = Place.getAll(this);
+
+        if (allPlaces == null) return;
+
+        displayList = new ArrayList<>();
         List<String> placeNames = new ArrayList<>();
-
-        for (PlaceItem place : placeList) {
-            placeNames.add(place.getName());
+        for (PlaceItem item : allPlaces) {
+            if (item.getName().toLowerCase().contains(text.toLowerCase())) {
+                displayList.add(item);
+                placeNames.add(item.getName());
+            }
         }
-
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, placeNames);
         listView.setAdapter(adapter);
+
+        TextView countText = findViewById(R.id.number_of_social);
+        countText.setText(displayList.size() + " Places");
     }
 }
