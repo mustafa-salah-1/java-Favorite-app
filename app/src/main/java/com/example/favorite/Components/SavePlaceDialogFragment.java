@@ -47,10 +47,10 @@ public class SavePlaceDialogFragment extends DialogFragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        try {
+        if (context instanceof SavePlaceListener) {
             listener = (SavePlaceListener) context;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + " must implement SavePlaceListener");
+        } else {
+            throw new RuntimeException(context.toString() + " must implement SavePlaceListener");
         }
     }
 

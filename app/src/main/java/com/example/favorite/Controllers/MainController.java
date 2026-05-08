@@ -12,8 +12,6 @@ import android.widget.ListView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.favorite.R;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -21,7 +19,6 @@ import java.util.Set;
 public class MainController extends AppCompatActivity {
 
     private ListView listView;
-    private FloatingActionButton fab;
     private ArrayList<String> placeNames;
     private ArrayList<String> rawPlaces;
     private ArrayAdapter<String> adapter;

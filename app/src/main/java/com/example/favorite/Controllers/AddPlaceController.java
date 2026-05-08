@@ -16,11 +16,8 @@ import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.MapEventsOverlay;
 import org.osmdroid.views.overlay.Marker;
 
-import androidx.appcompat.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.View;
-import android.widget.EditText;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -68,7 +65,6 @@ public class AddPlaceController extends AppCompatActivity implements SavePlaceDi
         MapEventsOverlay OverlayEvents = new MapEventsOverlay(mReceive);
         mapView.getOverlays().add(OverlayEvents);
 
-        // Check if we are viewing an existing place
         Intent intent = getIntent();
         String name = intent.getStringExtra("placeName");
         String latStr = intent.getStringExtra("latitude");

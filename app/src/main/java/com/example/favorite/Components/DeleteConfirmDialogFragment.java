@@ -32,10 +32,10 @@ public class DeleteConfirmDialogFragment extends DialogFragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        try {
+        if (context instanceof DeleteConfirmListener) {
             listener = (DeleteConfirmListener) context;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + " must implement DeleteConfirmListener");
+        } else {
+            throw new RuntimeException(context.toString() + " must implement DeleteConfirmListener");
         }
     }
 

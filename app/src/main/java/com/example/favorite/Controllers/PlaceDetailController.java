@@ -28,7 +28,6 @@ public class PlaceDetailController extends AppCompatActivity implements
 
     private TextView textViewName, textViewCoords, textViewDescription;
     private View cardViewDescription;
-    private Button buttonViewOnMap, buttonBack;
     private MapView mapView;
     private String name, description, lat, lon;
     private SharedPreferences sharedPreferences;
@@ -45,15 +44,15 @@ public class PlaceDetailController extends AppCompatActivity implements
         cardViewDescription = findViewById(R.id.cardViewDescription);
         mapView = findViewById(R.id.mapView);
 
+        sharedPreferences = getSharedPreferences("com.example.favorite", Context.MODE_PRIVATE);
         // OsmDroid Configuration
-        Configuration.getInstance().load(this, android.preference.PreferenceManager.getDefaultSharedPreferences(this));
+        Configuration.getInstance().load(this, sharedPreferences);
 
         name = getIntent().getStringExtra("placeName");
         description = getIntent().getStringExtra("description");
         lat = getIntent().getStringExtra("latitude");
         lon = getIntent().getStringExtra("longitude");
 
-        sharedPreferences = getSharedPreferences("com.example.favorite", Context.MODE_PRIVATE);
         // Construct the original string to find it later for editing/deletion
         originalPlaceString = name + "," + (description != null ? description : "") + "," + lat + "," + lon;
 
