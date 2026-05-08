@@ -21,10 +21,6 @@ import android.content.SharedPreferences;
 import android.widget.Toast;
 
 public class PlaceDetailController extends AppCompatActivity  {
-
-    private TextView textViewName, textViewCoords, textViewDescription;
-    private View cardViewDescription;
-    private MapView mapView;
     private PlaceItem currentPlace;
 
     @Override
@@ -32,14 +28,13 @@ public class PlaceDetailController extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_detail);
 
-        textViewName = findViewById(R.id.textViewDetailName);
-        textViewCoords = findViewById(R.id.textViewDetailCoords);
-        textViewDescription = findViewById(R.id.textViewDetailDescription);
-        cardViewDescription = findViewById(R.id.cardViewDescription);
-        mapView = findViewById(R.id.mapView);
+        TextView textViewName = findViewById(R.id.textViewDetailName);
+        TextView textViewCoords = findViewById(R.id.textViewDetailCoords);
+        TextView textViewDescription = findViewById(R.id.textViewDetailDescription);
+        View cardViewDescription = findViewById(R.id.cardViewDescription);
+        MapView mapView = findViewById(R.id.mapView);
 
         SharedPreferences sharedPreferences = getSharedPreferences("com.example.favorite", Context.MODE_PRIVATE);
-        // OsmDroid Configuration
         Configuration.getInstance().load(this, sharedPreferences);
 
         String name = getIntent().getStringExtra("placeName");
@@ -62,7 +57,6 @@ public class PlaceDetailController extends AppCompatActivity  {
                 cardViewDescription.setVisibility(View.GONE);
             }
 
-            // Initialize Map
             GeoPoint startPoint = new GeoPoint(latitude, longitude);
 
             mapView.setMultiTouchControls(true);
@@ -78,21 +72,6 @@ public class PlaceDetailController extends AppCompatActivity  {
 
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (mapView != null) {
-            mapView.onResume();
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (mapView != null) {
-            mapView.onPause();
-        }
-    }
     public void openMainPage(View view) {
         finish();
     }
@@ -104,7 +83,6 @@ public class PlaceDetailController extends AppCompatActivity  {
                     currentPlace.getDescription()
         );
         dialog.show(getSupportFragmentManager(), "EditPlaceDialog");
-
     }
 
     public void deletePlace(View view) {
