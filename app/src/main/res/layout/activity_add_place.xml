@@ -17,10 +17,10 @@
 
     </com.google.android.material.card.MaterialCardView>
 
-    <LinearLayout android:background="@color/purple_500" android:paddingTop="20dp" android:paddingBottom="20dp" android:paddingLeft="8dp" android:paddingRight="16dp" android:orientation="horizontal" android:gravity="center_vertical" android:layout_width="match_parent" android:layout_height="wrap_content">
+    <LinearLayout android:background="@color/purple_500" android:paddingTop="15dp" android:paddingBottom="15dp" android:paddingLeft="8dp" android:paddingRight="16dp" android:orientation="horizontal" android:gravity="center_vertical" android:layout_width="match_parent" android:layout_height="wrap_content">
 
         <LinearLayout android:onClick="openMainPage" android:orientation="vertical" android:gravity="center" android:layout_width="56dp" android:layout_height="wrap_content" android:paddingTop="4dp" android:paddingBottom="4dp">
-            <ImageView android:src="@drawable/back" android:layout_width="22dp" android:layout_height="22dp" />
+            <ImageView android:src="@drawable/back" android:layout_width="28dp" android:layout_height="28dp" />
         </LinearLayout>
 
         <TextView android:layout_weight="1" android:layout_width="0dp" android:layout_height="wrap_content" android:text="@string/title_place_saver" android:textSize="18sp" android:textStyle="bold" android:textColor="@color/white" android:paddingLeft="8dp" />
