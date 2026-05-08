@@ -7,12 +7,16 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.favorite.Components.PlaceAdapter;
 import com.example.favorite.Models.Place;
 import com.example.favorite.Models.PlaceItem;
 import com.example.favorite.R;
@@ -65,6 +69,11 @@ public class MainController extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void openAboutPage(View view) {
+        Intent intent = new Intent(MainController.this, AboutController.class);
+        startActivity(intent);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -84,10 +93,11 @@ public class MainController extends AppCompatActivity {
                 placeNames.add(item.getName());
             }
         }
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, placeNames);
+        PlaceAdapter adapter = new PlaceAdapter(this, displayList);
         listView.setAdapter(adapter);
 
         TextView countText = findViewById(R.id.number_of_social);
         countText.setText(displayList.size() + " Places");
     }
+
 }
