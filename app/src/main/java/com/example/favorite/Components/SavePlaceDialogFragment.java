@@ -45,7 +45,7 @@ public class SavePlaceDialogFragment extends DialogFragment {
     }
 
     @Override
-    public void onAttach(@NonNull Context context) {
+    public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof SavePlaceListener) {
             listener = (SavePlaceListener) context;
@@ -55,7 +55,7 @@ public class SavePlaceDialogFragment extends DialogFragment {
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             double lat = getArguments().getDouble("lat");
@@ -64,25 +64,20 @@ public class SavePlaceDialogFragment extends DialogFragment {
         }
     }
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // Make the background transparent to show rounded corners of the CardView
-        if (getDialog() != null && getDialog().getWindow() != null) {
-            getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-        }
+    public View onCreateView( LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
+        getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         return inflater.inflate(R.layout.dialog_save_place, container, false);
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         final TextInputEditText nameInput = view.findViewById(R.id.nameInput);
         final TextInputEditText descriptionInput = view.findViewById(R.id.descriptionInput);
-        Button btnSave = view.findViewById(R.id.btnSave);
-        Button btnCancel = view.findViewById(R.id.btnCancel);
+        Button btnSave = view.findViewById(R.id.button_save);
+        Button btnCancel = view.findViewById(R.id.button_cancel);
 
         if (getArguments() != null) {
             String initialName = getArguments().getString("name", "");
