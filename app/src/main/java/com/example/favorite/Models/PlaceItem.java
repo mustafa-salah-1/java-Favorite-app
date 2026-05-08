@@ -8,7 +8,7 @@ public class PlaceItem {
 
     public PlaceItem(String name, String description, double latitude, double longitude) {
         this.name = name;
-        this.description = description;
+        this.description = description != null ? description : "";
         this.latitude = latitude;
         this.longitude = longitude;
     }
@@ -26,7 +26,7 @@ public class PlaceItem {
     }
 
     public void setDescription(String description) {
-        this.description = description;
+        this.description = description != null ? description : "";
     }
 
     public double getLatitude() {
@@ -44,5 +44,4 @@ public class PlaceItem {
     public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
-
 }
