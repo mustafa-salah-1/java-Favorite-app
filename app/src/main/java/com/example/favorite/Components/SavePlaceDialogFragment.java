@@ -30,10 +30,16 @@ public class SavePlaceDialogFragment extends DialogFragment {
     private GeoPoint point;
 
     public static SavePlaceDialogFragment newInstance(GeoPoint p) {
+        return newInstance(p, "", "");
+    }
+
+    public static SavePlaceDialogFragment newInstance(GeoPoint p, String name, String description) {
         SavePlaceDialogFragment fragment = new SavePlaceDialogFragment();
         Bundle args = new Bundle();
         args.putDouble("lat", p.getLatitude());
         args.putDouble("lon", p.getLongitude());
+        args.putString("name", name);
+        args.putString("description", description);
         fragment.setArguments(args);
         return fragment;
     }
@@ -77,6 +83,13 @@ public class SavePlaceDialogFragment extends DialogFragment {
         final TextInputEditText descriptionInput = view.findViewById(R.id.descriptionInput);
         Button btnSave = view.findViewById(R.id.btnSave);
         Button btnCancel = view.findViewById(R.id.btnCancel);
+
+        if (getArguments() != null) {
+            String initialName = getArguments().getString("name", "");
+            String initialDescription = getArguments().getString("description", "");
+            nameInput.setText(initialName);
+            descriptionInput.setText(initialDescription);
+        }
 
         btnSave.setOnClickListener(v -> {
             String name = nameInput.getText() != null ? nameInput.getText().toString() : "";

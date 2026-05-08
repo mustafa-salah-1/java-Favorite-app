@@ -131,8 +131,9 @@
 
             </LinearLayout>
 
+            <!-- Edit button -->
             <LinearLayout
-                android:onClick="openPlaceSaver"
+                android:onClick="editPlace"
                 android:orientation="vertical"
                 android:gravity="center"
                 android:layout_width="56dp"
@@ -140,11 +141,25 @@
                 android:paddingTop="4dp"
                 android:paddingBottom="4dp">
                 <ImageView
-                    android:src="@drawable/plus"
+                    android:src="@drawable/ic_edit"
                     android:layout_width="22dp"
                     android:layout_height="22dp" />
             </LinearLayout>
 
+            <!-- Delete button -->
+            <LinearLayout
+                android:onClick="deletePlace"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_width="56dp"
+                android:layout_height="wrap_content"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp">
+                <ImageView
+                    android:src="@drawable/ic_delete"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp" />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 
