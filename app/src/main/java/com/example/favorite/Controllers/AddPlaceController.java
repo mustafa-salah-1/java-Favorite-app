@@ -1,14 +1,9 @@
 package com.example.favorite.Controllers;
 
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.EditText;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.favorite.R;
@@ -19,12 +14,17 @@ import org.osmdroid.events.MapEventsReceiver;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.MapEventsOverlay;
-import org.osmdroid.views.overlay.Marker;
+
+import androidx.appcompat.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.view.View;
+import android.widget.EditText;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public class MapController extends AppCompatActivity {
+public class AddPlaceController extends AppCompatActivity {
 
     private MapView mapView;
     private SharedPreferences sharedPreferences;
@@ -38,55 +38,33 @@ public class MapController extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("com.example.favorite", Context.MODE_PRIVATE);
         Configuration.getInstance().load(ctx, sharedPreferences);
 
-        setContentView(R.layout.activity_map);
+        setContentView(R.layout.activity_add_place);
 
         mapView = findViewById(R.id.mapView);
-        mapView.setMultiTouchControls(true); // Support zooming
+        mapView.setMultiTouchControls(true);
 
-        // Check if we are viewing an existing place or adding a new one
-        String name = getIntent().getStringExtra("placeName");
-        String latStr = getIntent().getStringExtra("latitude");
-        String lonStr = getIntent().getStringExtra("longitude");
+        // Set a default center and zoom for adding mode
+        IMapController mapController = mapView.getController();
+        mapController.setZoom(15.0);
+        // Default center (e.g., Erbil as per user's prompt example coords 36.19, 44.00)
+        mapController.setCenter(new GeoPoint(36.1900, 44.0090));
 
-        if (name != null && latStr != null && lonStr != null) {
-            // Logic Part A: Viewing a place
-            double lat = Double.parseDouble(latStr);
-            double lon = Double.parseDouble(lonStr);
-            GeoPoint startPoint = new GeoPoint(lat, lon);
+        MapEventsReceiver mReceive = new MapEventsReceiver() {
+            @Override
+            public boolean singleTapConfirmedHelper(GeoPoint p) {
+                showSaveDialog(p);
+                return true;
+            }
 
-            IMapController mapController = mapView.getController();
-            mapController.setZoom(18.0);
-            mapController.setCenter(startPoint);
+            @Override
+            public boolean longPressHelper(GeoPoint p) {
+                return false;
+            }
+        };
 
-            // Add a Marker with the place's name as the title
-            Marker marker = new Marker(mapView);
-            marker.setPosition(startPoint);
-            marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-            marker.setTitle(name);
-            mapView.getOverlays().add(marker);
-        } else {
-            // Set a default center and zoom for adding mode
-            IMapController mapController = mapView.getController();
-            mapController.setZoom(15.0);
-            // Default center (e.g., Erbil as per user's prompt example coords 36.19, 44.00)
-            mapController.setCenter(new GeoPoint(36.1900, 44.0090));
+        MapEventsOverlay OverlayEvents = new MapEventsOverlay(mReceive);
+        mapView.getOverlays().add(OverlayEvents);
 
-            MapEventsReceiver mReceive = new MapEventsReceiver() {
-                @Override
-                public boolean singleTapConfirmedHelper(GeoPoint p) {
-                    return false;
-                }
-
-                @Override
-                public boolean longPressHelper(GeoPoint p) {
-                    showSaveDialog(p);
-                    return true;
-                }
-            };
-
-            MapEventsOverlay OverlayEvents = new MapEventsOverlay(mReceive);
-            mapView.getOverlays().add(OverlayEvents);
-        }
     }
 
     private void showSaveDialog(final GeoPoint p) {
@@ -146,7 +124,7 @@ public class MapController extends AppCompatActivity {
     }
 
     public void openMainPage(View view) {
-        Intent intent = new Intent(MapController.this, MainController.class);
+        Intent intent = new Intent(AddPlaceController.this, MainController.class);
         startActivity(intent);
         finish();
     }

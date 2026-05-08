@@ -27,7 +27,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Controllers.MapController"
+            android:name=".Controllers.AddPlaceController"
+            android:exported="false" />
+        <activity
+            android:name=".Controllers.PlaceDetailController"
             android:exported="false" />
     </application>
 
