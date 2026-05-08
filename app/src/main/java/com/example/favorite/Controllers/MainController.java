@@ -45,7 +45,7 @@ public class MainController extends AppCompatActivity {
                 String rawPlace = rawPlaces.get(i);
                 String[] parts = rawPlace.split(",");
                 if (parts.length >= 3) {
-                    Intent intent = new Intent(MainController.this, MapController.class);
+                    Intent intent = new Intent(MainController.this, AddPlaceController.class);
                     intent.putExtra("placeName", parts[0]);
                     intent.putExtra("latitude", parts[1]);
                     intent.putExtra("longitude", parts[2]);
@@ -56,7 +56,7 @@ public class MainController extends AppCompatActivity {
     }
 
     public void openPlaceSaver(View view) {
-        Intent intent = new Intent(MainController.this, MapController.class);
+        Intent intent = new Intent(MainController.this, AddPlaceController.class);
         startActivity(intent);
     }
 
