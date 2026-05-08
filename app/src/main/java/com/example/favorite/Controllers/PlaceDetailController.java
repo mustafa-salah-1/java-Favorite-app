@@ -12,9 +12,10 @@ import com.example.favorite.R;
 
 public class PlaceDetailController extends AppCompatActivity {
 
-    private TextView textViewName, textViewCoords;
+    private TextView textViewName, textViewCoords, textViewDescription;
+    private View cardViewDescription;
     private Button buttonViewOnMap, buttonBack;
-    private String name, lat, lon;
+    private String name, description, lat, lon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,21 +24,30 @@ public class PlaceDetailController extends AppCompatActivity {
 
         textViewName = findViewById(R.id.textViewDetailName);
         textViewCoords = findViewById(R.id.textViewDetailCoords);
+        textViewDescription = findViewById(R.id.textViewDetailDescription);
+        cardViewDescription = findViewById(R.id.cardViewDescription);
         buttonViewOnMap = findViewById(R.id.buttonViewOnMap);
         buttonBack = findViewById(R.id.buttonBack);
 
         name = getIntent().getStringExtra("placeName");
+        description = getIntent().getStringExtra("description");
         lat = getIntent().getStringExtra("latitude");
         lon = getIntent().getStringExtra("longitude");
 
         textViewName.setText(name);
         textViewCoords.setText("Lat: " + lat + "\nLon: " + lon);
 
+        if (description != null && !description.isEmpty()) {
+            textViewDescription.setText(description);
+            cardViewDescription.setVisibility(View.VISIBLE);
+        }
+
         buttonViewOnMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(PlaceDetailController.this, AddPlaceController.class);
                 intent.putExtra("placeName", name);
+                intent.putExtra("description", description);
                 intent.putExtra("latitude", lat);
                 intent.putExtra("longitude", lon);
                 startActivity(intent);

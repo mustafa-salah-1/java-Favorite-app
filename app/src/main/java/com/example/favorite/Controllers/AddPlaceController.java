@@ -14,6 +14,7 @@ import org.osmdroid.events.MapEventsReceiver;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.MapEventsOverlay;
+import org.osmdroid.views.overlay.Marker;
 
 import androidx.appcompat.app.AlertDialog;
 import android.content.DialogInterface;
@@ -24,7 +25,9 @@ import android.widget.EditText;
 import java.util.HashSet;
 import java.util.Set;
 
-public class AddPlaceController extends AppCompatActivity {
+import com.example.favorite.Components.SavePlaceDialogFragment;
+
+public class AddPlaceController extends AppCompatActivity implements SavePlaceDialogFragment.SavePlaceListener {
 
     private MapView mapView;
     private SharedPreferences sharedPreferences;
@@ -65,43 +68,54 @@ public class AddPlaceController extends AppCompatActivity {
         MapEventsOverlay OverlayEvents = new MapEventsOverlay(mReceive);
         mapView.getOverlays().add(OverlayEvents);
 
+        // Check if we are viewing an existing place
+        Intent intent = getIntent();
+        String name = intent.getStringExtra("placeName");
+        String latStr = intent.getStringExtra("latitude");
+        String lonStr = intent.getStringExtra("longitude");
+
+        if (name != null && latStr != null && lonStr != null) {
+            try {
+                double lat = Double.parseDouble(latStr);
+                double lon = Double.parseDouble(lonStr);
+                GeoPoint startPoint = new GeoPoint(lat, lon);
+                mapController.setCenter(startPoint);
+
+                Marker startMarker = new Marker(mapView);
+                startMarker.setPosition(startPoint);
+                startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+                startMarker.setTitle(name);
+                String desc = intent.getStringExtra("description");
+                if (desc != null) {
+                    startMarker.setSnippet(desc);
+                }
+                mapView.getOverlays().add(startMarker);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     private void showSaveDialog(final GeoPoint p) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Name of this place");
-
-        final EditText input = new EditText(this);
-        builder.setView(input);
-
-        builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String name = input.getText().toString();
-                if (!name.isEmpty()) {
-                    savePlace(name, p.getLatitude(), p.getLongitude());
-                }
-            }
-        });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-
-        builder.show();
+        SavePlaceDialogFragment dialog = SavePlaceDialogFragment.newInstance(p);
+        dialog.show(getSupportFragmentManager(), "SavePlaceDialog");
     }
 
-    private void savePlace(String name, double lat, double lon) {
+    @Override
+    public void onPlaceSaved(String name, String description, GeoPoint p) {
+        savePlace(name, description, p.getLatitude(), p.getLongitude());
+    }
+
+    private void savePlace(String name, String description, double lat, double lon) {
         // Retrieve existing places
         Set<String> set = sharedPreferences.getStringSet("places", new HashSet<String>());
 
         // Create a new set to ensure SharedPreferences detects the change
         Set<String> newSet = new HashSet<>(set);
 
-        // Format: "PlaceName,Latitude,Longitude"
-        String placeString = name + "," + lat + "," + lon;
+        // Format: "PlaceName,Description,Latitude,Longitude"
+        String placeString = name + "," + description + "," + lat + "," + lon;
         newSet.add(placeString);
 
         // Save back to SharedPreferences

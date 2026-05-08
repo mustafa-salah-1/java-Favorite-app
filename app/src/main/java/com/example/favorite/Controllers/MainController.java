@@ -41,11 +41,20 @@ public class MainController extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                // Extract Name, Latitude, and Longitude from the saved string
+                // Extract Name, Description (if exists), Latitude, and Longitude
                 String rawPlace = rawPlaces.get(i);
                 String[] parts = rawPlace.split(",");
-                if (parts.length >= 3) {
-                    Intent intent = new Intent(MainController.this, AddPlaceController.class);
+                if (parts.length >= 4) {
+                    // New format: name, description, lat, lon
+                    Intent intent = new Intent(MainController.this, PlaceDetailController.class);
+                    intent.putExtra("placeName", parts[0]);
+                    intent.putExtra("description", parts[1]);
+                    intent.putExtra("latitude", parts[2]);
+                    intent.putExtra("longitude", parts[3]);
+                    startActivity(intent);
+                } else if (parts.length >= 3) {
+                    // Old format: name, lat, lon
+                    Intent intent = new Intent(MainController.this, PlaceDetailController.class);
                     intent.putExtra("placeName", parts[0]);
                     intent.putExtra("latitude", parts[1]);
                     intent.putExtra("longitude", parts[2]);
