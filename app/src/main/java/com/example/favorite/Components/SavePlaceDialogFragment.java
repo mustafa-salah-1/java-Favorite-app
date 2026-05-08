@@ -15,6 +15,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import com.example.favorite.Models.Place;
+import com.example.favorite.Models.PlaceItem;
 import com.example.favorite.R;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -22,11 +24,6 @@ import org.osmdroid.util.GeoPoint;
 
 public class SavePlaceDialogFragment extends DialogFragment {
 
-    public interface SavePlaceListener {
-        void onPlaceSaved(String name, String description, GeoPoint p);
-    }
-
-    private SavePlaceListener listener;
     private GeoPoint point;
 
     public static SavePlaceDialogFragment newInstance(GeoPoint p) {
@@ -47,7 +44,6 @@ public class SavePlaceDialogFragment extends DialogFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        listener = (SavePlaceListener) context;
     }
 
     @Override
@@ -91,8 +87,10 @@ public class SavePlaceDialogFragment extends DialogFragment {
             String name = nameInput.getText() != null ? nameInput.getText().toString() : "";
             String description = descriptionInput.getText() != null ? descriptionInput.getText().toString() : "";
             if (!name.isEmpty()) {
-                listener.onPlaceSaved(name, description, point);
+                PlaceItem newPlace = new PlaceItem(name, description, point.getLatitude(), point.getLongitude());
+                Place.addPlace(getContext(), newPlace);
                 dismiss();
+                getActivity().finish();
             } else {
                 nameInput.setError("Please enter a name");
             }
