@@ -1,13 +1,17 @@
-package com.example.favorite;
+package com.example.favorite.Controllers;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.EditText;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.favorite.R;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
@@ -20,7 +24,7 @@ import org.osmdroid.views.overlay.Marker;
 import java.util.HashSet;
 import java.util.Set;
 
-public class MapActivity extends AppCompatActivity {
+public class MapController extends AppCompatActivity {
 
     private MapView mapView;
     private SharedPreferences sharedPreferences;
@@ -114,17 +118,17 @@ public class MapActivity extends AppCompatActivity {
     private void savePlace(String name, double lat, double lon) {
         // Retrieve existing places
         Set<String> set = sharedPreferences.getStringSet("places", new HashSet<String>());
-        
+
         // Create a new set to ensure SharedPreferences detects the change
         Set<String> newSet = new HashSet<>(set);
-        
+
         // Format: "PlaceName,Latitude,Longitude"
         String placeString = name + "," + lat + "," + lon;
         newSet.add(placeString);
 
         // Save back to SharedPreferences
         sharedPreferences.edit().putStringSet("places", newSet).apply();
-        
+
         // Close MapActivity to return to MainActivity
         finish();
     }
@@ -139,5 +143,11 @@ public class MapActivity extends AppCompatActivity {
     public void onPause() {
         super.onPause();
         mapView.onPause();
+    }
+
+    public void openMainPage(View view) {
+        Intent intent = new Intent(MapController.this, MainController.class);
+        startActivity(intent);
+        finish();
     }
 }

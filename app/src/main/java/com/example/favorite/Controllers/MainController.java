@@ -1,4 +1,4 @@
-package com.example.favorite;
+package com.example.favorite.Controllers;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,13 +11,14 @@ import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.favorite.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-public class MainActivity extends AppCompatActivity {
+public class MainController extends AppCompatActivity {
 
     private ListView listView;
     private FloatingActionButton fab;
@@ -32,10 +33,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         listView = findViewById(R.id.listView);
-     
+
 
         sharedPreferences = getSharedPreferences("com.example.favorite", Context.MODE_PRIVATE);
- 
+
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -44,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
                 String rawPlace = rawPlaces.get(i);
                 String[] parts = rawPlace.split(",");
                 if (parts.length >= 3) {
-                    Intent intent = new Intent(MainActivity.this, MapActivity.class);
+                    Intent intent = new Intent(MainController.this, MapController.class);
                     intent.putExtra("placeName", parts[0]);
                     intent.putExtra("latitude", parts[1]);
                     intent.putExtra("longitude", parts[2]);
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void openPlaceSaver(View view) {
-        Intent intent = new Intent(MainActivity.this, MapActivity.class);
+        Intent intent = new Intent(MainController.this, MapController.class);
         startActivity(intent);
     }
 
