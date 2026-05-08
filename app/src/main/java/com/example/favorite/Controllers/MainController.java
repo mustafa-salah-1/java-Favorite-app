@@ -1,8 +1,6 @@
 package com.example.favorite.Controllers;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -11,18 +9,16 @@ import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.favorite.Models.Place;
+import com.example.favorite.Models.PlaceItem;
 import com.example.favorite.R;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 public class MainController extends AppCompatActivity {
 
     private ListView listView;
-    private ArrayList<String> placeNames;
-    private ArrayList<String> rawPlaces;
-    private ArrayAdapter<String> adapter;
-    private SharedPreferences sharedPreferences;
+    private List<PlaceItem> placeList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,32 +27,16 @@ public class MainController extends AppCompatActivity {
 
         listView = findViewById(R.id.listView);
 
-
-        sharedPreferences = getSharedPreferences("com.example.favorite", Context.MODE_PRIVATE);
-
-
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                // Extract Name, Description (if exists), Latitude, and Longitude
-                String rawPlace = rawPlaces.get(i);
-                String[] parts = rawPlace.split(",");
-                if (parts.length >= 4) {
-                    // New format: name, description, lat, lon
-                    Intent intent = new Intent(MainController.this, PlaceDetailController.class);
-                    intent.putExtra("placeName", parts[0]);
-                    intent.putExtra("description", parts[1]);
-                    intent.putExtra("latitude", parts[2]);
-                    intent.putExtra("longitude", parts[3]);
-                    startActivity(intent);
-                } else if (parts.length >= 3) {
-                    // Old format: name, lat, lon
-                    Intent intent = new Intent(MainController.this, PlaceDetailController.class);
-                    intent.putExtra("placeName", parts[0]);
-                    intent.putExtra("latitude", parts[1]);
-                    intent.putExtra("longitude", parts[2]);
-                    startActivity(intent);
-                }
+                PlaceItem selectedPlace = placeList.get(i);
+                Intent intent = new Intent(MainController.this, PlaceDetailController.class);
+                intent.putExtra("placeName", selectedPlace.getName());
+                intent.putExtra("description", selectedPlace.getDescription());
+                intent.putExtra("latitude", String.valueOf(selectedPlace.getLatitude()));
+                intent.putExtra("longitude", String.valueOf(selectedPlace.getLongitude()));
+                startActivity(intent);
             }
         });
     }
@@ -73,20 +53,14 @@ public class MainController extends AppCompatActivity {
     }
 
     private void updateList() {
-        // Load the saved strings from SharedPreferences
-        Set<String> set = sharedPreferences.getStringSet("places", new HashSet<String>());
-        rawPlaces = new ArrayList<>(set);
-        placeNames = new ArrayList<>();
+        placeList = Place.getAll(this);
+        List<String> placeNames = new ArrayList<>();
 
-        // Extract just the "PlaceName" for display
-        for (String place : rawPlaces) {
-            String[] parts = place.split(",");
-            if (parts.length > 0) {
-                placeNames.add(parts[0]);
-            }
+        for (PlaceItem place : placeList) {
+            placeNames.add(place.getName());
         }
 
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, placeNames);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, placeNames);
         listView.setAdapter(adapter);
     }
 }

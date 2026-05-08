@@ -94,7 +94,6 @@
                 android:paddingBottom="4dp">
                 <ImageView
                     android:src="@drawable/plus"
-                    android:tint="@color/white"
                     android:layout_width="22dp"
                     android:layout_height="22dp" />
                 <TextView
