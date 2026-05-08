@@ -1,10 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
+    <!-- Legacy aliases kept for compatibility -->
+    <color name="purple_200">#67E8F9</color>
+    <color name="purple_500">#0891B2</color>
+    <color name="purple_700">#0E7490</color>
+    <color name="teal_200">#67E8F9</color>
+    <color name="teal_700">#0891B2</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Core backgrounds (light mode only) -->
+    <color name="background_dark">#E0F7FA</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="dark_purple">#FFFFFF</color>
+    <color name="background_gray">#CCFBF1</color>
+    <color name="card_background">#FFFFFF</color>
+    <color name="border_color">#A5F3FC</color>
+
+    <!-- Brand / accent -->
+    <color name="primary_purple">#0891B2</color>
+    <color name="primary_light">#67E8F9</color>
+    <color name="primary_dark">#0E7490</color>
+    <color name="primary_glow">#E0F7FA</color>
+
+    <!-- Text (light mode) -->
+    <color name="text_primary">#0C4A6E</color>
+    <color name="text_gray">#6B7280</color>
+
+    <!-- Input field background -->
+    <color name="input_bg">#E0F7FA</color>
+    <color name="input_stroke">#67E8F9</color>
+
+    <!-- Header / Toolbar -->
+    <color name="header_bg">#0891B2</color>
+    <color name="header_text">#FFFFFF</color>
+    <color name="header_subtitle">#A5F3FC</color>
+    <color name="toolbar_bg">#0891B2</color>
+    <color name="nav_icon_tint">#FFFFFF</color>
+
+    <!-- Status -->
+    <color name="danger">#EF4444</color>
+    <color name="danger_bg">#FEF2F2</color>
 </resources>
