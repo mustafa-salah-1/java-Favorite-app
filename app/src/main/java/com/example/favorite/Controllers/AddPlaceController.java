@@ -22,7 +22,6 @@ import android.view.View;
 import com.example.favorite.Components.SavePlaceDialogFragment;
 
 public class AddPlaceController extends AppCompatActivity {
-
     private MapView mapView;
 
     @Override

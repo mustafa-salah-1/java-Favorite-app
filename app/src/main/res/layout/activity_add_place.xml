@@ -9,7 +9,7 @@
         <org.osmdroid.views.MapView android:id="@+id/mapView" android:layout_width="match_parent" android:layout_height="match_parent" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" />
     </LinearLayout>
 
-    <LinearLayout android:background="@color/purple_500" android:paddingTop="12dp" android:paddingBottom="12dp" android:paddingLeft="8dp" android:paddingRight="16dp" android:orientation="horizontal" android:gravity="center_vertical" android:layout_width="match_parent" android:layout_height="wrap_content">
+    <LinearLayout android:background="@color/purple_500" android:paddingTop="20dp" android:paddingBottom="20dp" android:paddingLeft="8dp" android:paddingRight="16dp" android:orientation="horizontal" android:gravity="center_vertical" android:layout_width="match_parent" android:layout_height="wrap_content">
 
         <LinearLayout android:onClick="openMainPage" android:orientation="vertical" android:gravity="center" android:layout_width="56dp" android:layout_height="wrap_content" android:paddingTop="4dp" android:paddingBottom="4dp">
             <ImageView android:src="@drawable/back" android:layout_width="22dp" android:layout_height="22dp" />
