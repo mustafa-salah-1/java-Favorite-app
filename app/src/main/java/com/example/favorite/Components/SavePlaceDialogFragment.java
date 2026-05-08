@@ -47,11 +47,7 @@ public class SavePlaceDialogFragment extends DialogFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof SavePlaceListener) {
-            listener = (SavePlaceListener) context;
-        } else {
-            throw new RuntimeException(context.toString() + " must implement SavePlaceListener");
-        }
+        listener = (SavePlaceListener) context;
     }
 
     @Override
@@ -74,10 +70,15 @@ public class SavePlaceDialogFragment extends DialogFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        Dialog dialog = getDialog();
+        int width = ViewGroup.LayoutParams.MATCH_PARENT;
+        int height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        dialog.getWindow().setLayout(width, height);
+
         final TextInputEditText nameInput = view.findViewById(R.id.nameInput);
         final TextInputEditText descriptionInput = view.findViewById(R.id.descriptionInput);
-        Button btnSave = view.findViewById(R.id.button_save);
-        Button btnCancel = view.findViewById(R.id.button_cancel);
+        Button button_save = view.findViewById(R.id.button_save);
+        Button button_cancel = view.findViewById(R.id.button_cancel);
 
         if (getArguments() != null) {
             String initialName = getArguments().getString("name", "");
@@ -86,7 +87,7 @@ public class SavePlaceDialogFragment extends DialogFragment {
             descriptionInput.setText(initialDescription);
         }
 
-        btnSave.setOnClickListener(v -> {
+        button_save.setOnClickListener(v -> {
             String name = nameInput.getText() != null ? nameInput.getText().toString() : "";
             String description = descriptionInput.getText() != null ? descriptionInput.getText().toString() : "";
             if (!name.isEmpty()) {
@@ -97,17 +98,6 @@ public class SavePlaceDialogFragment extends DialogFragment {
             }
         });
 
-        btnCancel.setOnClickListener(v -> dismiss());
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        Dialog dialog = getDialog();
-        if (dialog != null) {
-            int width = ViewGroup.LayoutParams.MATCH_PARENT;
-            int height = ViewGroup.LayoutParams.WRAP_CONTENT;
-            dialog.getWindow().setLayout(width, height);
-        }
+        button_cancel.setOnClickListener(v -> dismiss());
     }
 }

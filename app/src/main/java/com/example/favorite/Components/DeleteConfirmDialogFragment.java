@@ -30,27 +30,20 @@ public class DeleteConfirmDialogFragment extends DialogFragment {
     }
 
     @Override
-    public void onAttach(@NonNull Context context) {
+    public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof DeleteConfirmListener) {
-            listener = (DeleteConfirmListener) context;
-        } else {
-            throw new RuntimeException(context.toString() + " must implement DeleteConfirmListener");
-        }
+        listener = (DeleteConfirmListener) context;
     }
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (getDialog() != null && getDialog().getWindow() != null) {
+    public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState) {
             getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-        }
+
         return inflater.inflate(R.layout.dialog_confirm_delete, container, false);
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         Button btnDelete = view.findViewById(R.id.btnDelete);
