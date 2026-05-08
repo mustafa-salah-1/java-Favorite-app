@@ -86,12 +86,13 @@ public class SavePlaceDialogFragment extends DialogFragment {
         button_save.setOnClickListener(v -> {
             String name = nameInput.getText() != null ? nameInput.getText().toString() : "";
             String description = descriptionInput.getText() != null ? descriptionInput.getText().toString() : "";
-            if (!name.isEmpty()) {
+            if (!name.trim().isEmpty()) {
                 PlaceItem newPlace = new PlaceItem(name, description, point.getLatitude(), point.getLongitude());
                 Place.addPlace(getContext(), newPlace);
                 dismiss();
                 getActivity().finish();
             } else {
+                nameInput.setText(null);
                 nameInput.setError("Please enter a name");
             }
         });

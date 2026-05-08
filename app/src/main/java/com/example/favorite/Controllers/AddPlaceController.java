@@ -43,7 +43,8 @@ public class AddPlaceController extends AppCompatActivity {
         MapEventsReceiver mReceive = new MapEventsReceiver() {
             @Override
             public boolean singleTapConfirmedHelper(GeoPoint p) {
-                showSaveDialog(p);
+                SavePlaceDialogFragment dialog = SavePlaceDialogFragment.newInstance(p);
+                dialog.show(getSupportFragmentManager(), "SavePlaceDialog");
                 return true;
             }
 
@@ -56,12 +57,6 @@ public class AddPlaceController extends AppCompatActivity {
         MapEventsOverlay OverlayEvents = new MapEventsOverlay(mReceive);
         mapView.getOverlays().add(OverlayEvents);
     }
-
-    private void showSaveDialog(final GeoPoint p) {
-        SavePlaceDialogFragment dialog = SavePlaceDialogFragment.newInstance(p);
-        dialog.show(getSupportFragmentManager(), "SavePlaceDialog");
-    }
-
     public void openMainPage(View view) {
         finish();
     }
