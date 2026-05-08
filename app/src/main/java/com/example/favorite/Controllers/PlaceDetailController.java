@@ -6,7 +6,6 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.favorite.Models.Place;
 import com.example.favorite.Models.PlaceItem;
 import com.example.favorite.R;
 
