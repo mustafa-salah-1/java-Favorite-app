@@ -110,9 +110,7 @@ public class SavePlaceDialogFragment extends DialogFragment {
             }
             
             dismiss();
-            if (getActivity() != null) {
-                getActivity().finish();
-            }
+            getActivity().finish();
         });
 
         button_cancel.setOnClickListener(v -> dismiss());

@@ -92,7 +92,7 @@ public class MainController extends AppCompatActivity {
         PlaceAdapter adapter = new PlaceAdapter(this, displayList);
         listView.setAdapter(adapter);
 
-        TextView countText = findViewById(R.id.number_of_social);
+        TextView countText = findViewById(R.id.number_of_places);
         countText.setText(displayList.size() + " Places");
     }
 

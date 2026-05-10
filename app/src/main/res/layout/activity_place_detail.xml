@@ -6,7 +6,6 @@
     android:orientation="vertical"
     android:background="#F8F9FA">
 
-    <!-- Header Section -->
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -67,7 +66,6 @@
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- Map Section -->
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -94,7 +92,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <!-- Action row -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -113,8 +110,6 @@
 
             </LinearLayout>
 
-
-            <!-- Title + count -->
             <LinearLayout
                 android:layout_weight="1"
                 android:orientation="vertical"
@@ -131,7 +126,6 @@
 
             </LinearLayout>
 
-            <!-- Edit button -->
             <LinearLayout
                 android:onClick="editPlace"
                 android:orientation="vertical"
@@ -146,7 +140,6 @@
                     android:layout_height="22dp" />
             </LinearLayout>
 
-            <!-- Delete button -->
             <LinearLayout
                 android:onClick="deletePlace"
                 android:orientation="vertical"
