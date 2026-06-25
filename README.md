@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="app/src/main/res/drawable/logo.xml" alt="Favorite Logo" width="128" height="128">
+  <img src="logo.png" alt="Favorite Logo" width="128" height="128">
 </p>
 
 <h1 align="center">Favorite Places Saver 📍</h1>
